@@ -69,6 +69,7 @@ class AuthenticationController extends Controller
             ],401);
         }
 
+        try{
         $credentials = $request->only('email','password');
         if(!Auth::attempt($credentials)){
             return response()->json([
@@ -92,7 +93,15 @@ class AuthenticationController extends Controller
             'email'=>$user->email,
             'password'=>$user->password,
             'token'=>$token
-        ], 200);    
+        ], 200);   
+        }
+        catch(Exception $ex){
+            return response()->json([
+            'status' => 'error',
+            'message' => 'Server error',
+            'error' => $ex->getMessage()
+        ], 500);
+        } 
     }
 
     public function logout(Request $request){
